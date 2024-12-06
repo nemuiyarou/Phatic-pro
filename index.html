@@ -27,21 +27,11 @@
         if (!localStorage.getItem('analytics-consent')) {
             window.addEventListener('DOMContentLoaded', function() {
                 const banner = document.createElement('div');
-                banner.style.cssText = `
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    background: #000;
-                    color: #fff;
-                    padding: 1rem;
-                    text-align: center;
-                    z-index: 1000;
-                `;
+                banner.classList.add('cookie-banner');
                 banner.innerHTML = `
-                    This site uses cookies for analytics.
-                    <button onclick="accept()" style="margin: 0 10px;">Accept</button>
-                    <button onclick="decline()">Decline</button>
+                    This site uses cookies to analyze traffic and improve your experience.<br>
+                    <button onclick="accept()" class="accept">Accept</button>
+                    <button onclick="decline()" class="decline">Decline</button>
                 `;
                 document.body.appendChild(banner);
             });
