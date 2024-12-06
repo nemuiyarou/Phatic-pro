@@ -5,13 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phatic</title>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2RB3TWSNTM"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        // Only load GA if consent was previously given
+        if (localStorage.getItem('analytics-consent') === 'true') {
+            loadGA();
+        }
 
-      gtag('config', 'G-2RB3TWSNTM');
+        function loadGA() {
+            window.dataLayer = window.dataLayer || [];
+            var script = document.createElement('script');
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-2RB3TWSNTM';
+            script.async = true;
+            document.head.appendChild(script);
+            
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-2RB3TWSNTM');
+        }
+
+        // Add minimal cookie banner
+        if (!localStorage.getItem('analytics-consent')) {
+            window.addEventListener('DOMContentLoaded', function() {
+                const banner = document.createElement('div');
+                banner.style.cssText = `
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background: #000;
+                    color: #fff;
+                    padding: 1rem;
+                    text-align: center;
+                    z-index: 1000;
+                `;
+                banner.innerHTML = `
+                    This site uses cookies for analytics.
+                    <button onclick="accept()" style="margin: 0 10px;">Accept</button>
+                    <button onclick="decline()">Decline</button>
+                `;
+                document.body.appendChild(banner);
+            });
+        }
+
+        function accept() {
+            localStorage.setItem('analytics-consent', 'true');
+            loadGA();
+            removeBanner();
+        }
+
+        function decline() {
+            localStorage.setItem('analytics-consent', 'false');
+            removeBanner();
+        }
+
+        function removeBanner() {
+            const banner = document.querySelector('div[style*="position: fixed"]');
+            if (banner) banner.remove();
+        }
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
